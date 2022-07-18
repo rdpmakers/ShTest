@@ -1,0 +1,2 @@
+SRC='text'
+echo $SRC
