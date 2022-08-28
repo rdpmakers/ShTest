@@ -1,5 +1,6 @@
 sudo apt-get update
 sudo apt-get -y install lxde
+sudo apt-get install xrdp -y
 clear
 adduser desktop
 usermod -aG sudo desktop
