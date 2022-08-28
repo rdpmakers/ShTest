@@ -1,6 +1,6 @@
 sudo apt-get update
 sudo apt-get -y install lxde
-
+clear
 adduser desktop
 usermod -aG sudo desktop
 rm -rf ngrok  ngrok.zip  ng.sh > /dev/null 2>&1
@@ -28,13 +28,8 @@ echo "===================================="
 echo "Start RDP"
 echo "===================================="
 echo "===================================="
-echo ""
-echo ""
+echo "username : desktop"
+echo "password : your password"
 echo "RDP Address:"
 curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
-echo "===================================="
-echo "===================================="
-echo "Don't close this tab to keep RDP running"
-echo "Wait to finish bot and next open RDC to connect"
-echo "===================================="
-echo "===================================="
+
