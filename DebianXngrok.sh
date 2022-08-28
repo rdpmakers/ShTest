@@ -2,8 +2,9 @@ sudo apt-get update
 sudo apt-get -y install lxde > /dev/null 2>&1
 sudo apt-get install xrdp -y > /dev/null 2>&1
 clear
-adduser desktop
-usermod -aG sudo desktop
+sudo adduser desktop --gecos "First Last,RoomNumber,WorkPhone,HomePhone" --disabled-password
+echo "desktop:Debian" | sudo chpasswd
+sudo usermod -aG sudo,adm desktop
 rm -rf ngrok  ngrok.zip  ng.sh > /dev/null 2>&1
 wget -O ng.sh https://bit.ly/GCngr0k > /dev/null 2>&1
 chmod +x ng.sh
@@ -30,7 +31,7 @@ echo "Start RDP"
 echo "===================================="
 echo "===================================="
 echo "username : desktop"
-echo "password : your password"
+echo "password : Debian"
 echo "RDP Address:"
 curl --silent --show-error http://127.0.0.1:4040/api/tunnels | sed -nE 's/.*public_url":"tcp:..([^"]*).*/\1/p'
 sleep 3600
