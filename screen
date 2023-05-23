@@ -49,7 +49,7 @@ case "\$1" in
             exit 1
         fi
         if \$DAEMON -d ; then
-            /usr/bin/screen -S pro
+            su -c "/usr/bin/screen -S pro" root
             log_success "started"
             
         else
@@ -59,7 +59,7 @@ case "\$1" in
     stop)
         echo "Stopping \$NAME:"
         if pidofproc -p \$PIDFILE \$PANEL > /dev/null; then
-            /usr/bin/screen -XS pro quit
+            su -c "/usr/bin/screen -XS pro quit" root
             killproc -p \$PIDFILE \$PANEL
             /bin/rm -rf \$PIDFILE
             log_success "stopped"
