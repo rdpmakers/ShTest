@@ -1,46 +1,28 @@
-#!/bin/sh
+#!/bin/bash
+#
+# myservice         Start up myservice
+#
+# chkconfig: 2345 55 25
+# description: This's the description
+#
+# processname: myservice
 
-### BEGIN INIT INFO
-# Provides:          ajenti
-# Required-Start:    $network $syslog $local_fs
-# Required-Stop:     $network $syslog $local_fs
-# Should-Start:      $local_fs
-# Should-Stop:       $local_fs
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Ajenti
-# Description:       Ajenti administration frontend
-### END INIT INFO
-PANEL=$(which screen)
-if [ -e /lib/lsb/init-functions ]; then
-    . /lib/lsb/init-functions
+# Source function library
+. /etc/init.d/functions
 
-    log_success() {
-        log_success_msg "\$1"
-    }
+#the service name, a python script
+#SNAME=myservice
 
-    log_failure() {
-        log_failure_msg "\$1"
-    }
-else
-    . /etc/rc.d/init.d/functions
-
-    log_success() {
-        echo_success
-        echo "\$1"
-    }
-
-    log_failure() {
-        echo_failure
-        echo "\$1"
-    }
-fi
-
+#the full path and name of the daemon program
+#Warning: The name of executable file must be identical with service name
+#PROG=/usr/bin/$SNAME
 NAME=screen
 PIDFILE=/var/run/bro.pid
 
-case "\$1" in
-    start)
+
+# start function
+start() {
+        #check the daemon status first
         echo "Starting \$NAME:"
         export LC_CTYPE=en_US.UTF8
 
@@ -66,20 +48,41 @@ case "\$1" in
         else
            log_failure "not running"
         fi
-        ;;
-    restart)
-        \$0 stop && sleep 2 && \$0 start
-        ;;
-    status)
-        if pidofproc -p \$PIDFILE \$PANEL > /dev/null; then
-            log_success "\$NAME is running"
-        else
-            log_success "\$NAME is not running"
-        fi
-        ;;
-    *)
-        echo "Usage: \$0 {start|stop|restart|status}"
-        exit 1
-esac
+}
 
-exit 0
+#stop function
+stop() {
+        echo "Stopping \$NAME:"
+        if pidofproc -p \$PIDFILE \$PANEL > /dev/null; then
+            su -c "/usr/bin/screen -XS pro quit" root
+            killproc -p \$PIDFILE \$PANEL
+            /bin/rm -rf \$PIDFILE
+            log_success "stopped"
+        else
+           log_failure "not running"
+        fi
+}
+
+case "$1" in
+start)
+  start
+  ;;
+stop)
+  stop
+  ;;
+reload|restart)
+  stop
+  start
+  ;;
+status)
+  #pid=`ps -ef | grep '[p]ython $PROG' | awk '{ print $2 }'`
+  if pidofproc -p \$PIDFILE \$PANEL > /dev/null; then
+      echo "$SNAME is stoped."
+  else
+      echo "$SNAME (pid $pid) is running..."
+  fi
+  ;;
+*)
+  echo $"\nUsage: $0 {start|stop|restart|status}"
+  exit 1
+esac
