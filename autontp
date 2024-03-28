@@ -1,0 +1,11 @@
+[Unit]
+Description=Auto NTP Synchronization Service
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/etc/ntp.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
